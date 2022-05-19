@@ -17,6 +17,9 @@ public:
   const char * upsilonVersion() const;
   const void * storageAddress() const;
   const size_t storageSize() const;
+  const bool hasUpsilonExtras() const;
+  const void (*upsilonRecoveryBootFunction() const)();
+
 
 private:
   UserlandHeader();
@@ -42,6 +45,8 @@ private:
   const char m_UpsilonVersion[16];
   uint32_t m_osType;
   uint32_t m_upsilonMagicFooter;
+  const void (*m_recoveryAddress)();
+  uint32_t m_upsilonExtraMagicFooter;
 };
 
 extern const UserlandHeader* s_userlandHeaderA;

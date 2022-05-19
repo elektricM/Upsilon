@@ -17,6 +17,9 @@
 #error This file expects UPSILON_VERSION to be defined
 #endif
 
+extern "C" {
+  extern char _recovery_boot_start;
+}
 namespace Ion {
 extern char staticStorageArea[];
 }
@@ -72,7 +75,9 @@ public:
     m_upsilonMagicHeader(UpsilonMagic),
     m_UpsilonVersion{UPSILON_VERSION},
     m_osType(OSType),
-    m_upsilonMagicFooter(UpsilonMagic) { }
+    m_upsilonMagicFooter(UpsilonMagic),
+    m_recoveryAddress(((uint32_t)&_recovery_boot_start) + 1),
+    m_upsilonExtraMagicFooter(UpsilonMagic) { }
 
   const char * omegaVersion() const {
     assert(m_storageAddressRAM != nullptr);
@@ -128,6 +133,8 @@ private:
   const char m_UpsilonVersion[16];
   uint32_t m_osType;
   uint32_t m_upsilonMagicFooter;
+  uint32_t m_recoveryAddress;
+  uint32_t m_upsilonExtraMagicFooter;
 };
 
 const UserlandHeader __attribute__((section(".userland_header"), used)) k_userlandHeader;
