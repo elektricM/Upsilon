@@ -34,7 +34,7 @@ void Bootloader::UpsilonRecoveryMenu::postOpen() {
       forceExit();
       return;
     } else if (scan == Ion::Keyboard::State(Ion::Keyboard::Key::OnOff)) {
-      Ion::Power::standby();
+      Ion::Power::suspend();
       return;
     } else if (scan == Ion::Keyboard::State(Ion::Keyboard::Key::OK)) {
       Slot slot = Slot::Upsilon();
