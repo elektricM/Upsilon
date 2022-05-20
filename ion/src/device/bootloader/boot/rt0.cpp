@@ -169,10 +169,6 @@ void __attribute__((noinline)) __attribute__((section(".recovery_boot"))) __attr
 
   Ion::Device::Board::init();
 
-  if (is_recoverying) {
-    Ion::LED::setColor(KDColorBlue);
-  }
-
   jump_to_external_flash();
 
   abort();
