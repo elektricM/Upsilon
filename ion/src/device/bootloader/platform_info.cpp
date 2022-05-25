@@ -76,8 +76,10 @@ public:
     m_UpsilonVersion{UPSILON_VERSION},
     m_osType(OSType),
     m_upsilonMagicFooter(UpsilonMagic),
+    m_upsilonExtraMagicHeader(UpsilonExtraMagic),
     m_recoveryAddress(((uint32_t)&_recovery_boot_start) + 1),
-    m_upsilonExtraMagicFooter(UpsilonMagic) { }
+    m_extraVersion(1),
+    m_upsilonExtraMagicFooter(UpsilonExtraMagic) { }
 
   const char * omegaVersion() const {
     assert(m_storageAddressRAM != nullptr);
@@ -114,6 +116,7 @@ private:
   constexpr static uint32_t OmegaMagic = 0xEFBEADDE;
   constexpr static uint32_t UpsilonMagic = 0x55707369;
   constexpr static uint32_t OSType = 0x79827178;
+  constexpr static uint32_t UpsilonExtraMagic = 0xaa7073ff;
   uint32_t m_header;
   const char m_expectedEpsilonVersion[8];
   void * m_storageAddressRAM;
@@ -133,7 +136,9 @@ private:
   const char m_UpsilonVersion[16];
   uint32_t m_osType;
   uint32_t m_upsilonMagicFooter;
+  uint32_t m_upsilonExtraMagicHeader;
   uint32_t m_recoveryAddress;
+  uint16_t m_extraVersion;
   uint32_t m_upsilonExtraMagicFooter;
 };
 

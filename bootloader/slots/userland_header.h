@@ -19,6 +19,7 @@ public:
   const size_t storageSize() const;
   const bool hasUpsilonExtras() const;
   const void (*upsilonRecoveryBootFunction() const)();
+  const uint16_t getExtraVersion() const;
 
 
 private:
@@ -26,6 +27,7 @@ private:
   constexpr static uint32_t Magic = 0xDEC0EDFE;
   constexpr static uint32_t OmegaMagic = 0xEFBEADDE;
   constexpr static uint32_t UpsilonMagic = 0x55707369;
+  constexpr static uint32_t UpsilonExtraMagic = 0xaa7073ff;
   uint32_t m_header;
   const char m_expectedEpsilonVersion[8];
   void * m_storageAddressRAM;
@@ -45,7 +47,9 @@ private:
   const char m_UpsilonVersion[16];
   uint32_t m_osType;
   uint32_t m_upsilonMagicFooter;
+  uint32_t m_upsilonExtraMagicHeader;
   const void (*m_recoveryAddress)();
+  uint16_t m_extraVersion;
   uint32_t m_upsilonExtraMagicFooter;
 };
 
