@@ -19,7 +19,7 @@ public:
   const size_t storageSize() const;
   const bool hasUpsilonExtras() const;
   const void (*upsilonRecoveryBootFunction() const)();
-  const uint16_t getExtraVersion() const;
+  const uint32_t getExtraVersion() const;
 
 
 private:
@@ -49,7 +49,7 @@ private:
   uint32_t m_upsilonMagicFooter;
   uint32_t m_upsilonExtraMagicHeader;
   const void (*m_recoveryAddress)();
-  uint16_t m_extraVersion;
+  uint32_t m_extraVersion;
   uint32_t m_upsilonExtraMagicFooter;
 };
 

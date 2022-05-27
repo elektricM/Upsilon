@@ -138,7 +138,7 @@ private:
   uint32_t m_upsilonMagicFooter;
   uint32_t m_upsilonExtraMagicHeader;
   uint32_t m_recoveryAddress;
-  uint16_t m_extraVersion;
+  uint32_t m_extraVersion;
   uint32_t m_upsilonExtraMagicFooter;
 };
 
