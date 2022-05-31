@@ -39,6 +39,8 @@ void Bootloader::UpsilonRecoveryMenu::postOpen() {
     } else if (scan == Ion::Keyboard::State(Ion::Keyboard::Key::OK)) {
       Slot slot = Slot::Upsilon();
       Ion::Device::Board::bootloaderMPU();
+      // Deinitialize the backlight to prevent bugs when the firmware boots 
+      Ion::Backlight::shutdown();
       jump_to_firmware(slot.kernelHeader()->stackPointer(), slot.userlandHeader()->upsilonRecoveryBootFunction());
       for(;;);
     }
