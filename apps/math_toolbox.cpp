@@ -882,7 +882,6 @@ const ToolboxMessageTree menu[] = {
   ToolboxMessageTree::Leaf(I18n::Message::RootCommandWithArg, I18n::Message::NthRoot),
   ToolboxMessageTree::Leaf(I18n::Message::LogCommandWithArg, I18n::Message::BasedLogarithm),
   ToolboxMessageTree::Node(I18n::Message::Calculation, calculChildren),
-  ToolboxMessageTree::Node(I18n::Message::Logic, logicChildren),
   ToolboxMessageTree::Node(I18n::Message::ComplexNumber, complexChildren),
   ToolboxMessageTree::Node(I18n::Message::Unit, unitChildren),
   ToolboxMessageTree::Node(I18n::Message::Arithmetic, arithmeticChildren),
@@ -897,7 +896,8 @@ const ToolboxMessageTree menu[] = {
   ToolboxMessageTree::Node(I18n::Message::HyperbolicTrigonometry, trigonometryChildren),
   ToolboxMessageTree::Node(I18n::Message::Fluctuation, predictionChildren),
   ToolboxMessageTree::Node(I18n::Message::Chemistry, chemistry),
-  ToolboxMessageTree::Node(I18n::Message::Physics, Physics)
+  ToolboxMessageTree::Node(I18n::Message::Physics, Physics),
+  ToolboxMessageTree::Node(I18n::Message::Logic, logicChildren),
   };
 
 const ToolboxMessageTree toolboxModel = ToolboxMessageTree::Node(I18n::Message::Toolbox, menu);
