@@ -169,6 +169,7 @@ public:
   static Integer LogicalBitFlip(const Integer &a, const Integer &bit);
   static Integer Truncate(const Integer &a, const Integer &num_bits);
   static Integer TwosComplementToBits(const Integer &a, const Integer &num_bits);
+  static Integer CeilingLog2(const Integer &a);
 
   // Derived expression builder
   static Expression CreateMixedFraction(const Integer & num, const Integer & denom);

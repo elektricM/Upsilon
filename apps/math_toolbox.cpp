@@ -109,7 +109,8 @@ const ToolboxMessageTree logicChildren[] = {
   ToolboxMessageTree::Leaf(I18n::Message::LogicalBitClearCommandWithArg, I18n::Message::LogicalBitClear),
   ToolboxMessageTree::Leaf(I18n::Message::LogicalBitFlipCommandWithArg, I18n::Message::LogicalBitFlip),
   ToolboxMessageTree::Leaf(I18n::Message::LogicalBitsClearCommandWithArg, I18n::Message::LogicalBitsClear),
-  ToolboxMessageTree::Leaf(I18n::Message::TwosComplementToBitsCommandWithArg, I18n::Message::TwosComplementToBits)
+  ToolboxMessageTree::Leaf(I18n::Message::TwosComplementToBitsCommandWithArg, I18n::Message::TwosComplementToBits),
+  ToolboxMessageTree::Leaf(I18n::Message::CeilingLog2CommandWithArg, I18n::Message::CeilingLog2)
 };
 
 #if LIST_ARE_DEFINED

@@ -65,6 +65,7 @@ public:
     BinomialCoefficient,
     BinomPDF,
     Ceiling,
+    CeilingLog2,
     ComplexArgument,
     Conjugate,
     Derivative,

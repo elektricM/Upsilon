@@ -521,7 +521,7 @@ Integer Integer::LogicalShift(const Integer &a, const Integer &shift, const Inte
     return uint_final;
   }
 
-  // Sift Left
+  // Shift Left
   while (points > 0)
   {
     uint8_t power = (points >= 31) ? 31 : points;
@@ -830,6 +830,29 @@ Integer Integer::TwosComplementToBits(const Integer &a, const Integer &num_bits)
 
   // a is positive and the msb is 0
   return a;
+}
+
+Integer Integer::CeilingLog2(const Integer &a)
+{
+  if (a.isZero())
+  {
+    return Integer(0);
+  }
+  uint8_t bits = 0;
+  Integer buffer;
+  if(a.isNegative()) {
+    Integer x2 = Integer::Multiplication(a,2);
+    x2.setNegative(false);
+    buffer = Integer::Subtraction(x2, Integer(1));
+  } else {
+    buffer = a;
+  }
+  while(!buffer.isZero()) {
+    bits++;
+    buffer = Integer::LogicalShift(buffer,Integer(-1));
+  }
+  Integer num_bits_in_a = Integer(bits);
+  return num_bits_in_a;
 }
 
 Integer Integer::addition(const Integer & a, const Integer & b, bool inverseBNegative, bool oneDigitOverflow) {

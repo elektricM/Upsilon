@@ -295,6 +295,7 @@ template BinomialCoefficient TreeHandle::FixedArityBuilder<BinomialCoefficient, 
 template BinomialCoefficientLayout TreeHandle::FixedArityBuilder<BinomialCoefficientLayout, BinomialCoefficientLayoutNode>(const Tuple &);
 template BinomPDF TreeHandle::FixedArityBuilder<BinomPDF, BinomPDFNode>(const Tuple &);
 template Ceiling TreeHandle::FixedArityBuilder<Ceiling, CeilingNode>(const Tuple &);
+template CeilingLog2 TreeHandle::FixedArityBuilder<CeilingLog2, BinaryOperationNode<32> >(const Tuple &);
 template CeilingLayout TreeHandle::FixedArityBuilder<CeilingLayout, CeilingLayoutNode>(const Tuple &);
 template CommonLogarithm TreeHandle::FixedArityBuilder<CommonLogarithm, LogarithmNode<1> >(const Tuple &);
 template ComplexArgument TreeHandle::FixedArityBuilder<ComplexArgument, ComplexArgumentNode>(const Tuple &);

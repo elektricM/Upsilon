@@ -36,6 +36,7 @@ class Expression : public TreeHandle {
   friend class BitsClearExplicit;
   friend class BitSet;
   friend class Ceiling;
+  friend class CeilingLog2;
   friend class CommonLogarithm;
   template<typename T>
   friend class ComplexNode;

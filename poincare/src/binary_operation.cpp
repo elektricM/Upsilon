@@ -30,6 +30,7 @@ namespace Poincare {
   constexpr Expression::FunctionHelper RotateRight::s_functionHelper;
   constexpr Expression::FunctionHelper RotateRightExplicit::s_functionHelper;
   constexpr Expression::FunctionHelper TwosComplement::s_functionHelper;
+  constexpr Expression::FunctionHelper CeilingLog2::s_functionHelper;
 
   template<> int BinaryOperationNode<1>::numberOfChildren() const { return And::s_functionHelper.numberOfChildren(); }
   template<> int BinaryOperationNode<5>::numberOfChildren() const { return Or::s_functionHelper.numberOfChildren(); }
@@ -53,6 +54,7 @@ namespace Poincare {
   template<> int BinaryOperationNode<29>::numberOfChildren() const { return RotateRight::s_functionHelper.numberOfChildren(); }
   template<> int BinaryOperationNode<30>::numberOfChildren() const { return RotateRightExplicit::s_functionHelper.numberOfChildren(); }
   template<> int BinaryOperationNode<31>::numberOfChildren() const { return TwosComplement::s_functionHelper.numberOfChildren(); }
+  template<> int BinaryOperationNode<32>::numberOfChildren() const { return CeilingLog2::s_functionHelper.numberOfChildren(); }
 
   template<>
   Layout BinaryOperationNode<1>::createLayout(Preferences::PrintFloatMode floatDisplayMode, int numberOfSignificantDigits) const {
@@ -164,10 +166,15 @@ namespace Poincare {
     return LayoutHelper::Prefix(this, floatDisplayMode, numberOfSignificantDigits, TwosComplement::s_functionHelper.name());
   }
 
+  template<>
+  Layout BinaryOperationNode<32>::createLayout(Preferences::PrintFloatMode floatDisplayMode, int numberOfSignificantDigits) const {
+    return LayoutHelper::Prefix(this, floatDisplayMode, numberOfSignificantDigits, CeilingLog2::s_functionHelper.name());
+  }
 
   template<int T>
   int BinaryOperationNode<T>::serialize(char *buffer, int bufferSize, Preferences::PrintFloatMode floatDisplayMode, int numberOfSignificantDigits) const {
     return SerializationHelper::Prefix(this, buffer, bufferSize, floatDisplayMode, numberOfSignificantDigits,
+      T == 32 ? CeilingLog2::s_functionHelper.name() : 
       T == 31 ? TwosComplement::s_functionHelper.name() : 
       T == 30 ? RotateRightExplicit::s_functionHelper.name() : 
       T == 29 ? RotateRight::s_functionHelper.name() : 
@@ -303,6 +310,11 @@ namespace Poincare {
     return TwosComplement(this).shallowReduce(reductionContext);
   }
 
+  template<>
+  Expression BinaryOperationNode<32>::shallowReduce(ExpressionNode::ReductionContext reductionContext) {
+    return CeilingLog2(this).shallowReduce(reductionContext);
+  }
+
   // Check to make sure the the expression is a positive integer
   Integer getValidInteger(Expression a) {
     if (a.type() != ExpressionNode::Type::Rational) {
@@ -327,11 +339,11 @@ namespace Poincare {
     Integer cq;
     Integer x;
 
-    if(aq.isNegative() && t != ExpressionNode::Type::TwosComplement) {
+    if(aq.isNegative() && t != ExpressionNode::Type::TwosComplement && t != ExpressionNode::Type::CeilingLog2) {
       return Undefined::Builder();
     } 
 
-    if(t != ExpressionNode::Type::Not) {
+    if(t != ExpressionNode::Type::Not && t != ExpressionNode::Type::CeilingLog2) {
       bq = getValidInteger(e.childAtIndex(1));
       if(bq.isNegative()) {
         return Undefined::Builder();
@@ -434,6 +446,9 @@ namespace Poincare {
       case ExpressionNode::Type::TwosComplement:
         x = Integer::TwosComplementToBits(aq, bq);
         break;
+      case ExpressionNode::Type::CeilingLog2:
+        x = Integer::CeilingLog2(aq);
+        break;
       default:
         break;
     }
@@ -530,6 +545,10 @@ namespace Poincare {
     return BinaryOperation::shallowReduceDirect(*this, ExpressionNode::Type::TwosComplement, reductionContext);
   }
 
+  Expression CeilingLog2::shallowReduce(ExpressionNode::ReductionContext reductionContext) {
+    return BinaryOperation::shallowReduceDirect(*this, ExpressionNode::Type::CeilingLog2, reductionContext);
+  }
+
 template int BinaryOperationNode<1>::serialize(char * buffer, int bufferSize, Preferences::PrintFloatMode floatDisplayMode, int numberOfSignificantDigits) const;
 template int BinaryOperationNode<2>::serialize(char * buffer, int bufferSize, Preferences::PrintFloatMode floatDisplayMode, int numberOfSignificantDigits) const;
 template int BinaryOperationNode<3>::serialize(char * buffer, int bufferSize, Preferences::PrintFloatMode floatDisplayMode, int numberOfSignificantDigits) const;
@@ -561,5 +580,6 @@ template int BinaryOperationNode<28>::serialize(char * buffer, int bufferSize, P
 template int BinaryOperationNode<29>::serialize(char * buffer, int bufferSize, Preferences::PrintFloatMode floatDisplayMode, int numberOfSignificantDigits) const;
 template int BinaryOperationNode<30>::serialize(char * buffer, int bufferSize, Preferences::PrintFloatMode floatDisplayMode, int numberOfSignificantDigits) const;
 template int BinaryOperationNode<31>::serialize(char * buffer, int bufferSize, Preferences::PrintFloatMode floatDisplayMode, int numberOfSignificantDigits) const;
+template int BinaryOperationNode<32>::serialize(char * buffer, int bufferSize, Preferences::PrintFloatMode floatDisplayMode, int numberOfSignificantDigits) const;
 
 } // namespace Poincare

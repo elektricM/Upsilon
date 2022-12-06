@@ -114,6 +114,7 @@ private:
     &BitGet::s_functionHelper,
     &BitSet::s_functionHelper,
     &Ceiling::s_functionHelper,
+    &CeilingLog2::s_functionHelper,
     &ConfidenceInterval::s_functionHelper,
     &Conjugate::s_functionHelper,
     &Cosine::s_functionHelper,

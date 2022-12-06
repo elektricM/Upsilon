@@ -220,6 +220,14 @@ namespace Poincare
     Expression shallowReduce(ExpressionNode::ReductionContext reductionContext);
   };
 
+  class CeilingLog2 final : public Expression {
+  public:
+    CeilingLog2(const BinaryOperationNode<32> *n) : Expression(n) {}
+    static CeilingLog2 Builder(Expression child1) { return TreeHandle::FixedArityBuilder<CeilingLog2, BinaryOperationNode<32> >({child1}); }
+    static constexpr Expression::FunctionHelper s_functionHelper = Expression::FunctionHelper("clog2", 1, &UntypedBuilderOneChild<CeilingLog2>);
+    Expression shallowReduce(ExpressionNode::ReductionContext reductionContext);
+  };
+
 } // namespace Poincare
 
 #endif
