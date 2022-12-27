@@ -20,9 +20,7 @@ namespace Poincare {
   constexpr Expression::FunctionHelper BitsClear::s_functionHelper;
   constexpr Expression::FunctionHelper BitsClearExplicit::s_functionHelper;
   constexpr Expression::FunctionHelper ShiftLogicLeft::s_functionHelper;
-  constexpr Expression::FunctionHelper ShiftLogicLeftExplicit::s_functionHelper;
   constexpr Expression::FunctionHelper ShiftLogicRight::s_functionHelper;
-  constexpr Expression::FunctionHelper ShiftLogicRightExplicit::s_functionHelper;
   constexpr Expression::FunctionHelper ShiftArithmeticRight::s_functionHelper;
   constexpr Expression::FunctionHelper ShiftArithmeticRightExplicit::s_functionHelper;
   constexpr Expression::FunctionHelper RotateLeft::s_functionHelper;
@@ -44,9 +42,7 @@ namespace Poincare {
   template<> int BinaryOperationNode<19>::numberOfChildren() const { return BitsClear::s_functionHelper.numberOfChildren(); }
   template<> int BinaryOperationNode<20>::numberOfChildren() const { return BitsClearExplicit::s_functionHelper.numberOfChildren(); }
   template<> int BinaryOperationNode<21>::numberOfChildren() const { return ShiftLogicLeft::s_functionHelper.numberOfChildren(); }
-  template<> int BinaryOperationNode<22>::numberOfChildren() const { return ShiftLogicLeftExplicit::s_functionHelper.numberOfChildren(); }
   template<> int BinaryOperationNode<23>::numberOfChildren() const { return ShiftLogicRight::s_functionHelper.numberOfChildren(); }
-  template<> int BinaryOperationNode<24>::numberOfChildren() const { return ShiftLogicRightExplicit::s_functionHelper.numberOfChildren(); }
   template<> int BinaryOperationNode<25>::numberOfChildren() const { return ShiftArithmeticRight::s_functionHelper.numberOfChildren(); }
   template<> int BinaryOperationNode<26>::numberOfChildren() const { return ShiftArithmeticRightExplicit::s_functionHelper.numberOfChildren(); }
   template<> int BinaryOperationNode<27>::numberOfChildren() const { return RotateLeft::s_functionHelper.numberOfChildren(); }
@@ -117,18 +113,8 @@ namespace Poincare {
   }
 
   template<>
-  Layout BinaryOperationNode<22>::createLayout(Preferences::PrintFloatMode floatDisplayMode, int numberOfSignificantDigits) const {
-    return LayoutHelper::Prefix(this, floatDisplayMode, numberOfSignificantDigits, ShiftLogicLeftExplicit::s_functionHelper.name());
-  }
-
-  template<>
   Layout BinaryOperationNode<23>::createLayout(Preferences::PrintFloatMode floatDisplayMode, int numberOfSignificantDigits) const {
     return LayoutHelper::Prefix(this, floatDisplayMode, numberOfSignificantDigits, ShiftLogicRight::s_functionHelper.name());
-  }
-
-  template<>
-  Layout BinaryOperationNode<24>::createLayout(Preferences::PrintFloatMode floatDisplayMode, int numberOfSignificantDigits) const {
-    return LayoutHelper::Prefix(this, floatDisplayMode, numberOfSignificantDigits, ShiftLogicRightExplicit::s_functionHelper.name());
   }
 
   template<>
@@ -182,9 +168,7 @@ namespace Poincare {
       T == 27 ? RotateLeft::s_functionHelper.name() : 
       T == 26 ? ShiftArithmeticRightExplicit::s_functionHelper.name() : 
       T == 25 ? ShiftArithmeticRight::s_functionHelper.name() : 
-      T == 24 ? ShiftLogicRightExplicit::s_functionHelper.name() : 
       T == 23 ? ShiftLogicRight::s_functionHelper.name() : 
-      T == 22 ? ShiftLogicLeftExplicit::s_functionHelper.name() : 
       T == 21 ? ShiftLogicLeft::s_functionHelper.name() : 
       T == 20 ? BitsClearExplicit::s_functionHelper.name() : 
       T == 19 ? BitsClear::s_functionHelper.name() : 
@@ -261,18 +245,8 @@ namespace Poincare {
   }
 
   template<>
-  Expression BinaryOperationNode<22>::shallowReduce(ExpressionNode::ReductionContext reductionContext) {
-    return ShiftLogicLeftExplicit(this).shallowReduce(reductionContext);
-  }
-
-  template<>
   Expression BinaryOperationNode<23>::shallowReduce(ExpressionNode::ReductionContext reductionContext) {
     return ShiftLogicRight(this).shallowReduce(reductionContext);
-  }
-
-  template<>
-  Expression BinaryOperationNode<24>::shallowReduce(ExpressionNode::ReductionContext reductionContext) {
-    return ShiftLogicRightExplicit(this).shallowReduce(reductionContext);
   }
 
   template<>
@@ -365,8 +339,6 @@ namespace Poincare {
 
     switch(t) {
       case ExpressionNode::Type::BitsClearExplicit:
-      case ExpressionNode::Type::ShiftLogicLeftExplicit:
-      case ExpressionNode::Type::ShiftLogicRightExplicit:
       case ExpressionNode::Type::ShiftArithmeticRightExplicit:
       case ExpressionNode::Type::RotateLeftExplicit:
       case ExpressionNode::Type::RotateRightExplicit:
@@ -416,14 +388,8 @@ namespace Poincare {
       case ExpressionNode::Type::ShiftLogicLeft:
         x = Integer::LogicalShift(aq, bq);
         break;
-      case ExpressionNode::Type::ShiftLogicLeftExplicit:
-        x = Integer::LogicalShift(aq, bq, cq);
-        break;
       case ExpressionNode::Type::ShiftLogicRight:
         x = Integer::LogicalShift(aq, bq_neg);
-        break;
-      case ExpressionNode::Type::ShiftLogicRightExplicit:
-        x = Integer::LogicalShift(aq, bq_neg, cq);
         break;
       case ExpressionNode::Type::ShiftArithmeticRight:
         x = Integer::LogicalShiftRightArithmetic(aq, bq);
@@ -505,16 +471,8 @@ namespace Poincare {
     return BinaryOperation::shallowReduceDirect(*this, ExpressionNode::Type::ShiftLogicLeft, reductionContext);
   }
 
-  Expression ShiftLogicLeftExplicit::shallowReduce(ExpressionNode::ReductionContext reductionContext) {
-    return BinaryOperation::shallowReduceDirect(*this, ExpressionNode::Type::ShiftLogicLeftExplicit, reductionContext);
-  }
-
   Expression ShiftLogicRight::shallowReduce(ExpressionNode::ReductionContext reductionContext) {
     return BinaryOperation::shallowReduceDirect(*this, ExpressionNode::Type::ShiftLogicRight, reductionContext);
-  }
-
-  Expression ShiftLogicRightExplicit::shallowReduce(ExpressionNode::ReductionContext reductionContext) {
-    return BinaryOperation::shallowReduceDirect(*this, ExpressionNode::Type::ShiftLogicRightExplicit, reductionContext);
   }
 
   Expression ShiftArithmeticRight::shallowReduce(ExpressionNode::ReductionContext reductionContext) {

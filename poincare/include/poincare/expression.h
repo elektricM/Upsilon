@@ -108,9 +108,7 @@ class Expression : public TreeHandle {
   friend class ShiftArithmeticRight;
   friend class ShiftArithmeticRightExplicit;
   friend class ShiftLogicLeft;
-  friend class ShiftLogicLeftExplicit;
   friend class ShiftLogicRight;
-  friend class ShiftLogicRightExplicit;
   friend class SignFunction;
   friend class Sine;
   friend class SquareRoot;

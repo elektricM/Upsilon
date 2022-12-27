@@ -86,8 +86,6 @@ const ToolboxMessageTree vectorsChildren[] = {
 
 const ToolboxMessageTree logicExplicitChildren[] = {
   ToolboxMessageTree::Leaf(I18n::Message::LogicalNotExplicitCommandWithArg, I18n::Message::LogicalNot),
-  ToolboxMessageTree::Leaf(I18n::Message::LogicalShiftLeftExplicitCommandWithArg, I18n::Message::LogicalShiftLeft),
-  ToolboxMessageTree::Leaf(I18n::Message::LogicalShiftRightExplicitCommandWithArg, I18n::Message::LogicalShiftRight),
   ToolboxMessageTree::Leaf(I18n::Message::LogicalShiftRightArithmeticExplicitCommandWithArg, I18n::Message::LogicalShiftRightArithmetic),
   ToolboxMessageTree::Leaf(I18n::Message::LogicalRotateLeftExplicitCommandWithArg, I18n::Message::LogicalRotateLeft),
   ToolboxMessageTree::Leaf(I18n::Message::LogicalRotateRightExplicitCommandWithArg, I18n::Message::LogicalRotateRight),

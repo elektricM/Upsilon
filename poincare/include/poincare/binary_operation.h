@@ -140,27 +140,12 @@ namespace Poincare
     Expression shallowReduce(ExpressionNode::ReductionContext reductionContext);
   };
 
-  class ShiftLogicLeftExplicit final : public Expression {
-  public:
-    ShiftLogicLeftExplicit(const BinaryOperationNode<22> *n) : Expression(n) {}
-    static ShiftLogicLeftExplicit Builder(Expression child1, Expression child2, Expression child3) { return TreeHandle::FixedArityBuilder<ShiftLogicLeftExplicit, BinaryOperationNode<22> >({child1, child2, child3}); }
-    static constexpr Expression::FunctionHelper s_functionHelper = Expression::FunctionHelper("sll", 3, &UntypedBuilderThreeChildren<ShiftLogicLeftExplicit>);
-    Expression shallowReduce(ExpressionNode::ReductionContext reductionContext);
-  };
 
   class ShiftLogicRight final : public Expression {
   public:
     ShiftLogicRight(const BinaryOperationNode<23> *n) : Expression(n) {}
     static ShiftLogicRight Builder(Expression child1, Expression child2) { return TreeHandle::FixedArityBuilder<ShiftLogicRight, BinaryOperationNode<23> >({child1, child2}); }
     static constexpr Expression::FunctionHelper s_functionHelper = Expression::FunctionHelper("srl", 2, &UntypedBuilderTwoChildren<ShiftLogicRight>);
-    Expression shallowReduce(ExpressionNode::ReductionContext reductionContext);
-  };
-
-  class ShiftLogicRightExplicit final : public Expression {
-  public:
-    ShiftLogicRightExplicit(const BinaryOperationNode<24> *n) : Expression(n) {}
-    static ShiftLogicRightExplicit Builder(Expression child1, Expression child2, Expression child3) { return TreeHandle::FixedArityBuilder<ShiftLogicRightExplicit, BinaryOperationNode<24> >({child1, child2, child3}); }
-    static constexpr Expression::FunctionHelper s_functionHelper = Expression::FunctionHelper("srl", 3, &UntypedBuilderThreeChildren<ShiftLogicRightExplicit>);
     Expression shallowReduce(ExpressionNode::ReductionContext reductionContext);
   };
 
