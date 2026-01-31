@@ -35,9 +35,11 @@ App::App(Snapshot * snapshot) :
 
 void App::didBecomeActive(Window * window) {
   ::App::didBecomeActive(window);
-  Ion::Rpi::transferControl();
-  AppsContainer * container = AppsContainer::sharedAppsContainer();
-  container->switchTo(container->appSnapshotAtIndex(0));
+  bool connected = Ion::Rpi::transferControl();
+  if (connected) {
+    AppsContainer * container = AppsContainer::sharedAppsContainer();
+    container->switchTo(container->appSnapshotAtIndex(0));
+  }
 }
 
 }

@@ -70,6 +70,10 @@ ion_device_dfu_src += $(addprefix ion/src/device/shared/drivers/, \
   wakeup.cpp \
 )
 
+ifeq ($(ENABLE_RPI),1)
+ion_device_dfu_src += ion/src/device/shared/drivers/rpi.cpp
+endif
+
 # Sources required to execute DFU in place
 ion_device_src += ion/src/device/shared/usb/dfu_xip.cpp:+usbxip
 ion_device_src += $(addsuffix :+usbxip,$(ion_device_usb_src))

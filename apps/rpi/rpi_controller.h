@@ -10,6 +10,7 @@ class RpiController : public ViewController {
 public:
   RpiController();
   View * view() override;
+  bool handleEvent(Ion::Events::Event event) override;
 private:
   RpiView m_rpiView;
 };

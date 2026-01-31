@@ -249,7 +249,8 @@ The dummy `rpi.cpp` is always compiled into simulator builds (unconditionally in
 ### Simulator Build (no hardware needed)
 - [ ] `make PLATFORM=simulator ENABLE_RPI=1 -j$(nproc)` compiles without errors
 - [ ] RPi icon appears on home screen in simulator
-- [ ] Tapping icon does nothing visible (no-op transferControl) and returns to home
+- [ ] Tapping icon shows "Raspberry Pi / Not Connected" screen in RPi red (#C51A4A)
+- [ ] Pressing Back, Home, or OK returns to home screen
 
 ### Normal Build (RPi disabled)
 - [ ] `make MODEL=n0100 -j$(nproc)` compiles without errors
@@ -261,6 +262,10 @@ The dummy `rpi.cpp` is always compiled into simulator builds (unconditionally in
 - [ ] RPi icon appears on home screen
 - [ ] Binary includes rpi_isr at EXTI[9:5] vector slot
 - [ ] SPI1 clock enabled in APB2ENR
+
+### Device Build without Pi wired
+- [ ] Tapping RPi icon shows gray screen for ~3s, then "Not Connected" screen
+- [ ] Pressing Back, Home, or OK returns to home screen
 
 ### Hardware Test (with Pi wired)
 - [ ] Tapping RPi icon fills screen gray, then Pi takes over display
@@ -276,3 +281,4 @@ The dummy `rpi.cpp` is always compiled into simulator builds (unconditionally in
 | Date | Change |
 |------|--------|
 | 2026-01-31 | Initial port from zardam/epsilon@rpi to Upsilon. 15 new files, 9 modified files. |
+| 2026-01-31 | Add "Not Connected" screen with Pi detection timeout. transferControl() returns bool. |

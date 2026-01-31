@@ -39,9 +39,24 @@ extern "C" void rpi_isr() {
   }
 }
 
-void Ion::Rpi::transferControl() {
+bool Ion::Rpi::transferControl() {
   Ion::Display::pushRectUniform(KDRect(0,0,320,240), KDColor::RGB24(0x808080));
   setOn();
+
+  // Wait for Pi to start sending SPI data (CS goes low on PA6)
+  bool piDetected = false;
+  for (int i = 0; i < 30; i++) { // ~3 seconds
+    if (!GPIOA.IDR()->get(ChipSelectPin)) {
+      piDetected = true;
+      break;
+    }
+    Ion::Timing::msleep(100);
+  }
+  if (!piDetected) {
+    setOff();
+    return false;
+  }
+
   #define TO_HEX(i) (i <= 9 ? '0' + i : 'A' - 10 + i)
   uint64_t scan, lastScan = 0;
   char buf[18];
@@ -71,6 +86,7 @@ void Ion::Rpi::transferControl() {
   }
   #undef TO_HEX
   disableDisplay();
+  return true;
 }
 
 void Ion::Rpi::Device::init() {

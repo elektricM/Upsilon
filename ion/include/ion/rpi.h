@@ -4,7 +4,7 @@
 namespace Ion {
 namespace Rpi {
 
-void transferControl();
+bool transferControl();
 
 }
 }
