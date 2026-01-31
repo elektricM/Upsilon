@@ -18,3 +18,9 @@ ESCHER_LOG_EVENTS_BINARY ?= 0
 THEME_NAME ?= upsilon_light
 THEME_REPO ?= local
 INCLUDE_ULAB ?= 1
+ENABLE_RPI ?= 0
+
+ifeq ($(ENABLE_RPI),1)
+SFLAGS += -DENABLE_RPI=1
+EPSILON_APPS += rpi
+endif

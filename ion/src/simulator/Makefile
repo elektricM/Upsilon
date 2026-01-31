@@ -11,6 +11,7 @@ ion_src += $(addprefix ion/src/shared/dummy/, \
   serial_number.cpp \
   stack.cpp \
   usb.cpp \
+  rpi.cpp \
 )
 
 ion_src += $(addprefix ion/src/simulator/shared/, \

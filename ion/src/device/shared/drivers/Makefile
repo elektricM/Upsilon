@@ -28,3 +28,7 @@ ion_device_src += $(addprefix ion/src/device/shared/drivers/, \
   wakeup.cpp \
   bldata.cpp \
 )
+
+ifeq ($(ENABLE_RPI),1)
+ion_device_src += ion/src/device/shared/drivers/rpi.cpp
+endif

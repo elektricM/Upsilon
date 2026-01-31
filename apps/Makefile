@@ -93,15 +93,17 @@ i18n_files += $(call i18n_with_universal_for,shared)
 i18n_files += $(call i18n_with_universal_for,toolbox)
 i18n_files += $(call i18n_without_universal_for,variables)
 
-$(eval $(call rule_for, \
-  I18N, \
-  apps/i18n.cpp, \
-  $(i18n_files), \
-  $$(PYTHON) apps/i18n.py --codepoints $(code_points) --countrypreferences $(country_preferences) --languagepreferences $(language_preferences) --header $$(subst .cpp,.h,$$@) --implementation $$@ --locales $$(EPSILON_I18N) --countries $$(EPSILON_COUNTRIES) --files $$^, \
-  global \
-))
+# i18n.py generates both i18n.cpp and i18n.h in a single invocation.
+# To prevent race conditions in parallel builds (-j), we:
+# 1. Write to temporary files first
+# 2. Only move them to final location after both are complete
+# This ensures other jobs never see partially-written files.
 
-
+$(BUILD_DIR)/apps/i18n.cpp: $(strip $(i18n_files)) | $(BUILD_DIR)/apps/.
+	@ echo "$(shell printf "%-8s" "I18N")apps/i18n.cpp"
+	$(Q) $(PYTHON) apps/i18n.py --codepoints $(code_points) --countrypreferences $(country_preferences) --languagepreferences $(language_preferences) --header $(BUILD_DIR)/apps/i18n.h.tmp --implementation $(BUILD_DIR)/apps/i18n.cpp.tmp --locales $(EPSILON_I18N) --countries $(EPSILON_COUNTRIES) --files $^
+	$(Q) mv $(BUILD_DIR)/apps/i18n.cpp.tmp $@
+	$(Q) mv $(BUILD_DIR)/apps/i18n.h.tmp $(BUILD_DIR)/apps/i18n.h
 
 $(BUILD_DIR)/apps/i18n.h: $(BUILD_DIR)/apps/i18n.cpp
 

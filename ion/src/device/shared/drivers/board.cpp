@@ -12,6 +12,9 @@
 #include <drivers/timing.h>
 #include <drivers/usb.h>
 #include <drivers/config/clocks.h>
+#ifdef ENABLE_RPI
+#include <drivers/rpi.h>
+#endif
 
 namespace Ion {
 namespace Device {
@@ -41,6 +44,9 @@ void shutdownCompensationCell() {
 void initPeripherals(bool initBacklight) {
   initCompensationCell();
   Display::init();
+#ifdef ENABLE_RPI
+  Rpi::Device::init();
+#endif
   if (initBacklight) {
     Backlight::init();
   }
@@ -64,6 +70,9 @@ void shutdownPeripherals(bool keepLEDAwake) {
   }
   Keyboard::shutdown();
   Backlight::shutdown();
+#ifdef ENABLE_RPI
+  Rpi::Device::shutdown();
+#endif
   Display::shutdown();
   shutdownCompensationCell();
 }

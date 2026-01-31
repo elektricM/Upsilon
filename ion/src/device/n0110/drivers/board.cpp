@@ -283,6 +283,9 @@ void initClocks() {
   apb2enr.setADC1EN(true);
   apb2enr.setSYSCFGEN(true);
   apb2enr.setUSART6EN(true); // TODO required if building bench target only?
+#ifdef ENABLE_RPI
+  apb2enr.setSPI1EN(true);
+#endif
   RCC.APB2ENR()->set(apb2enr);
 
   // Configure clocks in sleep mode
