@@ -143,8 +143,8 @@ PA6 (SPI1_MISO)  ──────── GPIO 8  (SPI0_CE0)   [Pin 24] *Used as
 PA7 (SPI1_MOSI)  ──────── GPIO 10 (SPI0_MOSI)  [Pin 19]
 GND              ──────── GND                   [Pin 6, 9, 14, 20, 25, 30, 34, 39]
 
-UART_TX (PA9)    ──────── GPIO 15 (RXD)        [Pin 10]
-UART_RX (PA10)   ──────── GPIO 14 (TXD)        [Pin 8]
+UART_TX (PD8)    ──────── GPIO 15 (RXD)        [Pin 10]  *USART3*
+UART_RX (PC11)   ──────── GPIO 14 (TXD)        [Pin 8]   *USART3*
 ```
 
 ### Complete Wiring Table
@@ -155,8 +155,8 @@ UART_RX (PA10)   ──────── GPIO 14 (TXD)        [Pin 8]
 | Chip Select | PA6 | 24 | GPIO 8 (CE0) | Orange |
 | SPI MOSI | PA7 | 19 | GPIO 10 (MOSI) | Green |
 | Ground | GND | 6, 9, 14, etc. | GND | Black |
-| UART RX (Pi receives) | PA9 (TX) | 10 | GPIO 15 | Blue |
-| UART TX (Pi sends) | PA10 (RX) | 8 | GPIO 14 | White |
+| UART RX (Pi receives) | PD8 (USART3 TX) | 10 | GPIO 15 | Blue |
+| UART TX (Pi sends) | PC11 (USART3 RX) | 8 | GPIO 14 | White |
 
 ### Power Wiring
 

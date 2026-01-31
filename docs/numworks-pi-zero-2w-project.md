@@ -18,7 +18,7 @@ Modification of the NumWorks N0100 calculator case to directly house a Raspberry
 |--------------|-------|
 | Total Dimensions | 160mm × 82mm × 10mm (6.3" × 3.2" × 0.4") |
 | Internal Height | ~6-7mm (after PCB ~1.6mm + case walls) |
-| MCU | STM32F730V8T6 |
+| MCU | STM32F412 (Cortex-M4) |
 | Display | 320×240 LCD |
 
 ### Raspberry Pi Zero 2 W
@@ -36,11 +36,11 @@ Modification of the NumWorks N0100 calculator case to directly house a Raspberry
 
 | Specification | Value |
 |--------------|-------|
-| Model | 603759 (Tenergy Li-Polymer) |
-| Dimensions | 61.5mm × 38mm × 6.2mm (L × W × T) |
-| Capacity | 1450mAh @ 3.7V |
-| Weight | ~30g |
-| Datasheet | https://www.tenergy.com/30142-0 |
+| Model | JFT 315572SE-C |
+| Voltage | 3.8V (high-voltage LiPo) |
+| Capacity | 1820mAh |
+| Dimensions | 3.1mm × 55mm × 72mm (T × W × L) |
+| Markings | 3.8V 18C13 |
 
 ---
 
@@ -54,7 +54,7 @@ To maintain case closure, battery thickness must stay ≤6mm.
 
 | Model | Dimensions (T×W×L) | Capacity | Capacity vs Original | Availability |
 |-------|-------------------|----------|---------------------|--------------|
-| 603759 | 6 × 38 × 59mm | 1450mAh | 1.00× (baseline) | Original |
+| JFT 315572SE-C | 3.1 × 55 × 72mm | 1820mAh | 1.00× (baseline) | Original |
 | 604060 | 6 × 40 × 60mm | ~1800mAh | 1.24× | Common |
 | 605080 | 6 × 50 × 80mm | ~3000mAh | 2.07× | Available |
 | **606090** | **6 × 60 × 90mm** | **4000mAh** | **2.76×** | **Very common** |
@@ -104,29 +104,33 @@ If more clearance is needed:
 
 ### Zardam's Original Design (Reference)
 
-The original external implementation by Zardam uses asymmetric power control:
+The original implementation by Zardam uses asymmetric power control:
 
 #### Power ON
-- STM32 GPIO drives P-channel MOSFET gate LOW
-- Enables 3.3V rail to Pi
-- Triggered when "external" app launches on NumWorks
+- `setOn()`: STM32 sets PB9 as GPIO Output, drives LOW
+- P-channel MOSFET turns ON → battery voltage reaches Pi 5V pin
+- EXTI display bridge is enabled
+- Triggered when RPi app launches on NumWorks
 
-#### Power OFF (Manual by Design)
-- Pi stays powered until explicit shutdown
-- User must run `sudo shutdown -h now`
-- STM32 detects Pi halt via GPIO or timeout
-- Then safely cuts power via MOSFET
+#### App Exit (HOME key)
+- `transferControl()` only calls `disableDisplay()` — masks EXTI interrupt, deasserts SPI slave select
+- **Does NOT call `setOff()`** — Pi stays powered and running
+- User can re-enter the RPi app and resume their session
 
-#### Why No Auto-Shutdown on App Exit?
-- App exit returns to NumWorks menu, not necessarily end of Pi session
-- User might accidentally press Back
-- Abrupt power cut would corrupt SD card
+#### Power OFF (Calculator Shutdown Only)
+- `setOff()` is called during board shutdown (when calculator itself powers down)
+- Sets PB9 to Analog mode with no pull resistor
+- External 10kΩ pull-up pulls MOSFET gate HIGH → MOSFET turns OFF
+- **Hard power cut** — no graceful Linux shutdown, no handshake
+- SD card corruption risk — use a read-only root filesystem or accept occasional corruption
 
-### Safe Shutdown Strategies
+> "The RPi is powered up upon entering the application, and powered down when the calculator is powered down. So it is possible to leave or enter the RPi application as needed." — Zardam
 
-1. **Shutdown script** - Button combo or menu triggers `shutdown -h now`
-2. **GPIO handshake** - Pi signals "ready to die", STM32 then cuts power
-3. **Idle timeout** - Auto-shutdown after X minutes of inactivity
+### Potential Improvements (Not Yet Implemented)
+
+1. **Shutdown script** — Button combo or menu triggers `shutdown -h now`
+2. **GPIO handshake** — Pi signals "ready to die" via a GPIO pin, STM32 then cuts power
+3. **Idle timeout** — Auto-shutdown after X minutes of inactivity
 
 ---
 

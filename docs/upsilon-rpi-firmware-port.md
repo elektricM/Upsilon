@@ -166,10 +166,10 @@ The hex encoding sends a `:` prefix followed by 16 hex digits representing the 6
 
 | STM32 Pin | Function | Pi GPIO | Pi Pin # | Direction |
 |-----------|----------|---------|----------|-----------|
-| PD8 / PA9 | USART3 TX | GPIO 15 (RXD) | 10 | STM32 → Pi |
-| PC11 / PA10 | USART3 RX | GPIO 14 (TXD) | 8 | Pi → STM32 |
+| PD8 | USART3 TX (AF7) | GPIO 15 (RXD) | 10 | STM32 → Pi |
+| PC11 | USART3 RX (AF7) | GPIO 14 (TXD) | 8 | Pi → STM32 |
 
-Note: The exact UART pins depend on the console config for your board. Upsilon's console uses USART3 by default.
+Note: Both zardam's original Epsilon and Upsilon use USART3 (TX=PD8, RX=PC11).
 
 ### Power Control
 
@@ -249,8 +249,7 @@ The dummy `rpi.cpp` is always compiled into simulator builds (unconditionally in
 ### Simulator Build (no hardware needed)
 - [ ] `make PLATFORM=simulator ENABLE_RPI=1 -j$(nproc)` compiles without errors
 - [ ] RPi icon appears on home screen in simulator
-- [ ] Tapping icon shows "Raspberry Pi / Not Connected" screen in RPi red (#C51A4A)
-- [ ] Pressing Back, Home, or OK returns to home screen
+- [ ] Tapping icon does nothing visible (no-op transferControl) and returns to home
 
 ### Normal Build (RPi disabled)
 - [ ] `make MODEL=n0100 -j$(nproc)` compiles without errors
@@ -262,10 +261,6 @@ The dummy `rpi.cpp` is always compiled into simulator builds (unconditionally in
 - [ ] RPi icon appears on home screen
 - [ ] Binary includes rpi_isr at EXTI[9:5] vector slot
 - [ ] SPI1 clock enabled in APB2ENR
-
-### Device Build without Pi wired
-- [ ] Tapping RPi icon shows gray screen for ~3s, then "Not Connected" screen
-- [ ] Pressing Back, Home, or OK returns to home screen
 
 ### Hardware Test (with Pi wired)
 - [ ] Tapping RPi icon fills screen gray, then Pi takes over display
@@ -281,4 +276,3 @@ The dummy `rpi.cpp` is always compiled into simulator builds (unconditionally in
 | Date | Change |
 |------|--------|
 | 2026-01-31 | Initial port from zardam/epsilon@rpi to Upsilon. 15 new files, 9 modified files. |
-| 2026-01-31 | Add "Not Connected" screen with Pi detection timeout. transferControl() returns bool. |

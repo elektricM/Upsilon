@@ -279,6 +279,22 @@ def _load_library(find_library=None):
     # On FreeBSD 8/9, libusb 1.0 and libusb 0.1 are in the same shared
     # object libusb.so, so if we found libusb library name, we must assure
     # it is 1.0 version. We just try to get some symbol from 1.0 version
+
+    # macOS + Homebrew: ctypes.util.find_library often fails to locate
+    # libusb in /opt/homebrew/lib (Apple Silicon) or /usr/local/lib (Intel).
+    # Try loading directly from known Homebrew paths first.
+    if sys.platform == 'darwin' and find_library is None:
+        import os
+        for brew_path in ('/opt/homebrew/lib/libusb-1.0.dylib',
+                          '/usr/local/lib/libusb-1.0.dylib'):
+            if os.path.exists(brew_path):
+                try:
+                    _brew_lib = CDLL(brew_path)
+                    if hasattr(_brew_lib, 'libusb_init'):
+                        return _brew_lib
+                except Exception:
+                    pass
+
     if sys.platform == 'win32':
         win_cls = WinDLL
     else:

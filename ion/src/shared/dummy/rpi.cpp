@@ -7,5 +7,9 @@ bool transferControl() {
   return false;
 }
 
+bool isPowered() {
+  return false;
+}
+
 }
 }

@@ -5,6 +5,7 @@ namespace Ion {
 namespace Rpi {
 
 bool transferControl();
+bool isPowered();
 
 }
 }

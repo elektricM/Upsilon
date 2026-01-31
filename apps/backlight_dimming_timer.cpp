@@ -3,6 +3,9 @@
 #include <ion/backlight.h>
 #include <ion/events.h>
 #include <apps/apps_container.h>
+#ifdef ENABLE_RPI
+#include <ion/rpi.h>
+#endif
 
 BacklightDimmingTimer::BacklightDimmingTimer() :
   Timer(GlobalPreferences::sharedGlobalPreferences()->idleBeforeDimmingSeconds()*1000/Timer::TickDuration)
@@ -10,6 +13,11 @@ BacklightDimmingTimer::BacklightDimmingTimer() :
 }
 
 bool BacklightDimmingTimer::fire(){
+#ifdef ENABLE_RPI
+  if (Ion::Rpi::isPowered()) {
+    return false;
+  }
+#endif
   int i = Ion::Backlight::brightness();
   while (i > 0){
     int t = 20;

@@ -6,6 +6,12 @@
 using namespace Ion::Device::Regs;
 using namespace Ion::Rpi::Device;
 
+static bool s_powered = false;
+
+bool Ion::Rpi::isPowered() {
+  return s_powered;
+}
+
 static void enableDisplay() {
   EXTI.IMR()->set(Ion::Rpi::Device::ChipSelectPin, true);
 }
@@ -13,6 +19,7 @@ static void enableDisplay() {
 static void setOn() {
   PowerPin.group().MODER()->setMode(PowerPin.pin(), GPIO::MODER::Mode::Output);
   PowerPin.group().ODR()->set(PowerPin.pin(), false);
+  s_powered = true;
   enableDisplay();
 }
 
@@ -23,6 +30,7 @@ static void disableDisplay() {
 
 static void setOff() {
   disableDisplay();
+  s_powered = false;
   PowerPin.group().MODER()->setMode(PowerPin.pin(), GPIO::MODER::Mode::Analog);
   PowerPin.group().PUPDR()->setPull(PowerPin.pin(), GPIO::PUPDR::Pull::None);
 }
@@ -42,20 +50,6 @@ extern "C" void rpi_isr() {
 bool Ion::Rpi::transferControl() {
   Ion::Display::pushRectUniform(KDRect(0,0,320,240), KDColor::RGB24(0x808080));
   setOn();
-
-  // Wait for Pi to start sending SPI data (CS goes low on PA6)
-  bool piDetected = false;
-  for (int i = 0; i < 30; i++) { // ~3 seconds
-    if (!GPIOA.IDR()->get(ChipSelectPin)) {
-      piDetected = true;
-      break;
-    }
-    Ion::Timing::msleep(100);
-  }
-  if (!piDetected) {
-    setOff();
-    return false;
-  }
 
   #define TO_HEX(i) (i <= 9 ? '0' + i : 'A' - 10 + i)
   uint64_t scan, lastScan = 0;
@@ -96,6 +90,7 @@ void Ion::Rpi::Device::init() {
   GPIOA.MODER()->setMode(5, GPIO::MODER::Mode::AlternateFunction);
   GPIOA.AFR()->setAlternateFunction(5, GPIO::AFR::AlternateFunction::AF5);
   GPIOA.MODER()->setMode(6, GPIO::MODER::Mode::Input);
+  GPIOA.PUPDR()->setPull(6, GPIO::PUPDR::Pull::Up);
   GPIOA.MODER()->setMode(7, GPIO::MODER::Mode::AlternateFunction);
   GPIOA.AFR()->setAlternateFunction(7, GPIO::AFR::AlternateFunction::AF5);
 
