@@ -194,8 +194,8 @@ Look for the transistor footprint near the SD card pads on the PCB.
     Connections:
     Pin 2  (5V)     ← Battery via MOSFET
     Pin 6  (GND)    ← NumWorks GND
-    Pin 8  (TXD)    ← NumWorks UART RX (PA10)
-    Pin 10 (RXD)    ← NumWorks UART TX (PA9)
+    Pin 8  (TXD)    ← NumWorks UART RX (PC11, USART3)
+    Pin 10 (RXD)    ← NumWorks UART TX (PD8, USART3)
     Pin 19 (MOSI)   ← NumWorks SPI MOSI (PA7)
     Pin 23 (SCLK)   ← NumWorks SPI CLK (PA5)
     Pin 24 (CE0)    ← NumWorks SPI CS (PA6)
@@ -208,8 +208,9 @@ Look for the transistor footprint near the SD card pads on the PCB.
 ### On the Raspberry Pi
 
 #### 5.1 Operating System
-- Raspberry Pi OS Lite (32-bit recommended for Zero)
+- Raspberry Pi OS Bullseye (Legacy) 32-bit Lite (recommended)
 - Standard Raspbian/Debian-based setup
+- Serial device for keyboard daemon: `/dev/ttyS0` on Pi Zero W / Zero 2 W
 
 #### 5.2 SPI Framebuffer Driver (spifb)
 
@@ -315,9 +316,47 @@ hdmi_group=2
 hdmi_mode=87
 ```
 
+Create **/etc/systemd/system/fbcp.service**:
+```ini
+[Unit]
+Description=Framebuffer copy (HDMI to SPI)
+After=systemd-modules-load.service
+
+[Service]
+Type=simple
+ExecStart=/home/pi/rpi-fbcp/build/fbcp
+User=root
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Enable the service:
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable fbcp
+sudo systemctl start fbcp
+```
+
+#### 5.7 Optional: Direct Framebuffer Mode (No GPU Acceleration)
+
+For terminal/text use without fbcp, configure X11 to use fb1 directly:
+
+**/usr/share/X11/xorg.conf.d/99-fbdev.conf**:
+```
+Section "Device"
+  Identifier "myfb"
+  Driver "fbdev"
+  Option "fbdev" "/dev/fb1"
+EndSection
+```
+
+Add `fbcon=map:10` to `/boot/cmdline.txt` and install: `sudo apt-get install xserver-xorg-video-fbdev`
+
 ### On the NumWorks Calculator
 
-#### 5.7 Custom Firmware (Epsilon with RPi App)
+#### 5.8 Custom Firmware (Epsilon with RPi App)
 
 ```bash
 # Install NumWorks SDK first (see NumWorks documentation)
@@ -338,7 +377,7 @@ make epsilon_flash MODEL=n0110   # For N0110
 
 ## 6. Keyboard Mapping
 
-The calculator has only 46 keys, so modifier keys are used to access all functions:
+The calculator has 46 keys, so modifier keys are used to access all functions:
 
 | Calculator Key | Default | With "x,n,t" | With "var" |
 |----------------|---------|--------------|------------|
@@ -352,7 +391,7 @@ The calculator has only 46 keys, so modifier keys are used to access all functio
 | Exe | Enter | = | - |
 | Space | Space | - (minus) | - |
 
-**Mouse Mode:** Press Power button to toggle mouse keys (arrows become mouse movement).
+**Mouse Mode:** NUMLOCK toggle via numpad keys — the power key (bit 7 in the key state) acts as a NUMLOCK toggle. When active, numpad arrow keys switch to mouse movement, OK becomes left click, Back becomes right click.
 
 ---
 
@@ -371,7 +410,7 @@ The calculator has only 46 keys, so modifier keys are used to access all functio
 
 ### Step 3: Solder Connections
 1. **SPI Pads:** Carefully solder 30 AWG wires to PA5, PA6, PA7 pads
-2. **UART Pads:** Solder to PA9 (TX) and PA10 (RX)
+2. **UART Pads:** Solder to PD8 (USART3 TX) and PC11 (USART3 RX)
 3. **Power:** Solder MOSFET circuit to battery terminals
 4. **Ground:** Use USB port shield or dedicated ground pad
 
@@ -389,7 +428,7 @@ The calculator has only 46 keys, so modifier keys are used to access all functio
 |--------|-------|
 | Display Resolution | 320 × 240 pixels |
 | Color Depth | 16-bit (RGB565) |
-| SPI Speed | 62.5 MHz (tested stable, spec is 50 MHz) |
+| SPI Speed | 62.5 MHz effective (code requests 70 MHz, BCM2835 rounds down to 250/4=62.5 MHz) |
 | Theoretical Max FPS | ~50 fps |
 | Practical FPS | 30-40 fps with fbcp scaling |
 | Power Consumption | ~120mA typical (Pi Zero + display) |

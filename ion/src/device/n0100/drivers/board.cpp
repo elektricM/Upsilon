@@ -122,6 +122,9 @@ void initClocks() {
   RCC.APB1ENR()->setTIM3EN(true);
   RCC.APB1ENR()->setPWREN(true);
   RCC.APB1ENR()->setRTCAPB(true);
+#ifdef ENABLE_RPI
+  RCC.APB1ENR()->setUSART3EN(true);
+#endif
 
   // APB2 bus
   class RCC::APB2ENR apb2enr(0x00008000); // Reset value

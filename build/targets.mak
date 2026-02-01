@@ -11,7 +11,11 @@ base_src = $(ion_src) $(liba_src) $(default_kandinsky_src) $(escher_src) $(libax
 
 epsilon_src = $(base_src) $(apps_src)
 
+ifeq ($(ENABLE_RPI),1)
+$(BUILD_DIR)/epsilon.$(EXE): $(call flavored_object_for,$(epsilon_src),consoleuart)
+else
 $(BUILD_DIR)/epsilon.$(EXE): $(call flavored_object_for,$(epsilon_src))
+endif
 
 HANDY_TARGETS += epsilon
 
