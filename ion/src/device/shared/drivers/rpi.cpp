@@ -31,8 +31,9 @@ static void disableDisplay() {
 static void setOff() {
   disableDisplay();
   s_powered = false;
-  PowerPin.group().MODER()->setMode(PowerPin.pin(), GPIO::MODER::Mode::Analog);
-  PowerPin.group().PUPDR()->setPull(PowerPin.pin(), GPIO::PUPDR::Pull::None);
+  // Drive HIGH to reliably turn off P-MOSFET (instead of floating)
+  PowerPin.group().MODER()->setMode(PowerPin.pin(), GPIO::MODER::Mode::Output);
+  PowerPin.group().ODR()->set(PowerPin.pin(), true);
 }
 
 extern "C" void rpi_isr() {
