@@ -18,7 +18,7 @@ static void enableDisplay() {
 
 static void setOn() {
   PowerPin.group().MODER()->setMode(PowerPin.pin(), GPIO::MODER::Mode::Output);
-  PowerPin.group().ODR()->set(PowerPin.pin(), false);
+  PowerPin.group().ODR()->set(PowerPin.pin(), true);  // HIGH enables SX1308 boost
   s_powered = true;
   enableDisplay();
 }
@@ -31,9 +31,9 @@ static void disableDisplay() {
 static void setOff() {
   disableDisplay();
   s_powered = false;
-  // Drive HIGH to reliably turn off P-MOSFET (instead of floating)
+  // Drive LOW to disable SX1308 boost (PCB has 10k pull-down)
   PowerPin.group().MODER()->setMode(PowerPin.pin(), GPIO::MODER::Mode::Output);
-  PowerPin.group().ODR()->set(PowerPin.pin(), true);
+  PowerPin.group().ODR()->set(PowerPin.pin(), false);
 }
 
 extern "C" void rpi_isr() {
