@@ -1,12 +1,17 @@
 #include <ion/led.h>
+#include <ion/usb.h>
+#include <ion/exam_mode.h>
 
 namespace Ion {
 namespace LED {
 
 KDColor updateColorWithPlugAndCharge() {
-  /* Prevent updating LED color with charging status as the end of charge
-   * current is never detected on N0100 model. */
-  return getColor();
+  KDColor ledColor = getColor();
+  if (ExamMode::FetchExamMode() == 0) {
+    ledColor = USB::isPlugged() ? KDColor::RGB24(0xCCDDFF) : KDColorBlack;
+    setColor(ledColor);
+  }
+  return ledColor;
 }
 
 }

@@ -1,4 +1,5 @@
 #include <ion.h>
+#include <ion/led.h>
 #include <regs/regs.h>
 #include "rpi.h"
 #include "display.h"
@@ -21,6 +22,7 @@ static void setOn() {
   PowerPin.group().ODR()->set(PowerPin.pin(), true);  // HIGH enables SX1308 boost
   s_powered = true;
   enableDisplay();
+  Ion::LED::setColor(KDColor::RGB24(0x1A0005)); // Dim pink while Pi is on
 }
 
 static void disableDisplay() {
@@ -34,6 +36,7 @@ static void setOff() {
   // Drive LOW to disable SX1308 boost (PCB has 10k pull-down)
   PowerPin.group().MODER()->setMode(PowerPin.pin(), GPIO::MODER::Mode::Output);
   PowerPin.group().ODR()->set(PowerPin.pin(), false);
+  Ion::LED::setColor(KDColorBlack);
 }
 
 extern "C" void rpi_isr() {
