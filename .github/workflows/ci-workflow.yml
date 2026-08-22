@@ -21,6 +21,10 @@ on:
         description: 'Run fxcg tests'
         required: true
         default: 'no'
+      triggerWeb:
+        description: 'Run web tests'
+        required: true
+        default: 'no'
 jobs:
   fxcg: # fxcg build is broken for now, disabling it for now to avoid noise
     if: github.event.inputs.triggerFxcg == 'yes'
@@ -410,7 +414,8 @@ jobs:
         with:
           name: epsilon-windows.exe
           path: output/release/simulator/windows/epsilon.exe
-  web:
+  web: # broken upstream: numworks/setup-emscripten@master throws "Cannot read properties of null"
+    if: github.event.inputs.triggerWeb == 'yes'
     runs-on: ubuntu-latest
     steps:
       - uses: numworks/setup-emscripten@master
@@ -508,8 +513,8 @@ jobs:
         with:
           name: epsilon-linux.bin
           path: output/release/simulator/linux/epsilon.bin
-  macos:
-    if: github.event.inputs.triggerMacos == 'yes' || github.event.inputs.triggerMacos == ''
+  macos: # broken upstream: the epsilon-sdk formula calls Language::Python.setup_install_args, removed from Homebrew
+    if: github.event.inputs.triggerMacos == 'yes'
     runs-on: macOS-latest
     steps:
       - run: brew install python-setuptools
@@ -544,8 +549,8 @@ jobs:
           git pull
           git commit -m "Update from CI"
           git push
-  ios:
-    if: github.event.inputs.triggerIos == 'yes' || github.event.inputs.triggerIos == ''
+  ios: # broken upstream: same epsilon-sdk formula failure as macos
+    if: github.event.inputs.triggerIos == 'yes'
     runs-on: macos-14
     steps:
       - run: brew install python-setuptools
