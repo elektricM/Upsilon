@@ -513,6 +513,7 @@ jobs:
     runs-on: macOS-latest
     steps:
       - run: brew install python-setuptools
+      - run: brew trust numworks/tap
       - run: brew install numworks/tap/epsilon-sdk
       - uses: actions/checkout@v5
         with:
@@ -548,6 +549,7 @@ jobs:
     runs-on: macos-14
     steps:
       - run: brew install python-setuptools
+      - run: brew trust numworks/tap
       - run: brew install numworks/tap/epsilon-sdk
       - uses: actions/checkout@v5
         with:
